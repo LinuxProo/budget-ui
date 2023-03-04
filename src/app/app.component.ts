@@ -12,5 +12,5 @@ export class AppComponent {
     { title: 'Categories', url: `/${categoriesPath}`, icon: 'pricetag' },
   ];
 
-  constructor() {}
+  constructor(readonly authService: AuthService) {}
 }
