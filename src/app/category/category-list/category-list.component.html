@@ -13,39 +13,40 @@
   <ion-grid>
 
     <ion-row>
-      <ion-col>
+      <ion-col size='12' size-sm='6'>
         <ion-item>
-          <ion-icon name="swap-horizontal-outline" slot="start"></ion-icon>
-          <ion-select interface="popover">
-            <ion-select-option value="Created at (newest first)">Created at (newest first)</ion-select-option>
-            <ion-select-option value="Created at (oldest first)">Created at (oldest first)</ion-select-option>
-            <ion-select-option value="Name (A-Z)">Name (A-Z)</ion-select-option>
-            <ion-select-option value="Name (Z-A)">Name (Z-A)</ion-select-option>
+          <ion-icon name='swap-horizontal-outline' slot='start'></ion-icon>
+          <ion-select interface='popover'>
+            <ion-select-option value='Created at (newest first)'>Created at (newest first)</ion-select-option>
+            <ion-select-option value='Created at (oldest first)'>Created at (oldest first)</ion-select-option>
+            <ion-select-option value='Name (A-Z)'>Name (A-Z)</ion-select-option>
+            <ion-select-option value='Name (Z-A)'>Name (Z-A)</ion-select-option>
           </ion-select>
         </ion-item>
-
       </ion-col>
-      <ion-col>
+      <ion-col size='12' size-sm='6'>
         <ion-item>
-          <ion-icon name="search" slot="start"></ion-icon>
-          <ion-input placeholder="Search"></ion-input>
+          <ion-icon name='search' slot='start'></ion-icon>
+          <ion-input maxlength='40' placeholder='Search' [clearInput]='true'></ion-input>
         </ion-item>
-
       </ion-col>
     </ion-row>
   </ion-grid>
 
-  <ion-list>
+  <!-- Kategorienliste -->
+  <ion-list inset='true'>
 
-
+    <!-- Kategorien -->
+    <ion-item button='true' [detail]='true' (click)='openModal()'>
+      <ion-label>Auswärts essen</ion-label>
+    </ion-item>
 
   </ion-list>
 
 
-
-  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-    <ion-fab-button>
-      <ion-icon name="add"></ion-icon>
+  <ion-fab slot='fixed' vertical='bottom' horizontal='end'>
+    <ion-fab-button (click)='openModal()'>
+      <ion-icon name='add'></ion-icon>
     </ion-fab-button>
   </ion-fab>
 
