@@ -10,11 +10,13 @@ import { AngularFireModule } from '@angular/fire/compat';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { environment } from '../environments/environment';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import {AuthInterceptor} from "./shared/interceptor/auth.interceptor";
+import {LoginComponent} from "./shared/login/login.components";
 
 registerLocaleData(locale);
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent,LoginComponent],
   imports: [
     AppRoutingModule,
     AngularFireAuthModule,
@@ -27,7 +29,9 @@ registerLocaleData(locale);
     { provide: DEFAULT_CURRENCY_CODE, useValue: 'CHF' },
     { provide: LOCALE_ID, useValue: 'en-CH' },
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],
 })
+
 export class AppModule {}
