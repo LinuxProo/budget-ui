@@ -15,10 +15,6 @@
 <!-- Content -->
 <!-- ------- -->
 <ion-content>
-
-  <!-- Search & sort -->
-  ion-content>
-
   <!-- Search & sort -->
   <ion-grid class="ion-padding" [formGroup]="searchForm">
     <ion-row>
@@ -27,7 +23,7 @@
           <ion-icon name="swap-vertical" slot="start"></ion-icon>
           <ion-select interface="popover" formControlName="sort">
             <ion-select-option *ngFor="let sortOption of sortOptions" [value]="sortOption.value">
-              {{sortOption.label}}
+              {{ sortOption.label }}
             </ion-select-option>
           </ion-select>
         </ion-item>
@@ -43,7 +39,6 @@
 
   <!-- Category list -->
   <ion-list [ngSwitch]="categories?.length" inset="true">
-
     <!-- Skeleton -->
     <ng-container *ngSwitchCase="null">
       <ion-item *ngFor="let i of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]">
@@ -56,21 +51,23 @@
     <!-- Empty list -->
     <ion-item *ngSwitchCase="0">
       <ion-icon slot="start" name="alert-circle-outline"></ion-icon>
-      <ion-label>
-        No categories found
-      </ion-label>
+      <ion-label> No categories found </ion-label>
     </ion-item>
 
     <!-- Categories -->
     <ng-container *ngSwitchDefault>
-      <ion-item button="true" *ngFor="let category of categories" [detail]="true" [disabled]="loading"
-                (click)="openModal(category)">
+      <ion-item
+        button="true"
+        *ngFor="let category of categories"
+        [detail]="true"
+        [disabled]="loading"
+        (click)="openModal(category)"
+      >
         <ion-label>
-          {{category.name}}
+          {{ category.name }}
         </ion-label>
       </ion-item>
     </ng-container>
-
   </ion-list>
 
   <!-- Infinite scroll -->
@@ -89,5 +86,4 @@
   <ion-refresher slot="fixed" (ionRefresh)="reloadCategories($event)" [disabled]="loading">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-
 </ion-content>

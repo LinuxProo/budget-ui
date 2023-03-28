@@ -2,13 +2,13 @@
 <!-- ------ -->
 <ion-header>
   <ion-toolbar>
+    <ion-buttons slot="start">
     <ion-button color="medium" (click)="cancel()" [disabled]="submitting">
       <ion-icon slot="start" name="close"></ion-icon>
       Cancel
     </ion-button>
-
+    </ion-buttons>
     <ion-title>Add category</ion-title>
-
     <ion-buttons slot="end">
       <ion-button (click)="save()" [disabled]="categoryForm.invalid || submitting">
         <ion-icon slot="start" name="save"></ion-icon>
