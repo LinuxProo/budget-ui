@@ -1,15 +1,22 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { filter, from } from 'rxjs';
+import {BehaviorSubject, filter, from, mergeMap} from 'rxjs';
 import { CategoryModalComponent } from '../../category/category-modal/category-modal.component';
 import { ActionSheetService } from '../../shared/service/action-sheet.service';
+import {Category} from "../../shared/domain";
 
 @Component({
   selector: 'app-expense-modal',
   templateUrl: './expense-modal.component.html',
 })
-export class ExpenseModalComponent {
-  constructor(private readonly actionSheetService: ActionSheetService, private readonly modalCtrl: ModalController) {}
+export class ExpenseModalComponent implements OnInit {
+  categories: Category[] = [];
+  submitting: any;
+  categoryForm: any | Event;
+  constructor(
+    private readonly actionSheetService: ActionSheetService,
+    private readonly modalCtrl: ModalController
+  ) {}
 
   cancel(): void {
     this.modalCtrl.dismiss(null, 'cancel');
@@ -30,5 +37,21 @@ export class ExpenseModalComponent {
     categoryModal.present();
     const { role } = await categoryModal.onWillDismiss();
     console.log('role', role);
+  }
+  private loadAllCategories(): void {
+    const pageToLoad = new BehaviorSubject(0);
+   /* pageToLoad
+      .pipe(mergeMap((page) => this.categoryService.getCategories({ page, size: 25, sort: 'name,asc' })))
+      .subscribe({
+        next: (categories) => {
+          if (pageToLoad.value === 0) this.categories = [];
+          this.categories.push(...categories.content);
+          if (!categories.last) pageToLoad.next(pageToLoad.value + 1);
+        },
+        error: (error) => this.toastService.displayErrorToast('Could not load categories', error),
+      });*/
+  }
+  ngOnInit(): void {
+    this.loadAllCategories();
   }
 }

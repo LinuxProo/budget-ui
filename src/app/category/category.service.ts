@@ -22,5 +22,4 @@ export class CategoryService {
   // Delete
 
   deleteCategory = (id: string): Observable<void> => this.httpClient.delete<void>(`${this.apiUrl}/${id}`);
-
 }

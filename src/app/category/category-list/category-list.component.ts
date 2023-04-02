@@ -32,7 +32,6 @@ export class CategoryListComponent implements OnInit, OnDestroy {
     private readonly formBuilder: FormBuilder
   ) {
     this.searchForm = this.formBuilder.group({ name: [], sort: [this.initialSort] });
-    this.searchForm = this.formBuilder.group({ name: [], sort: [this.initialSort] });
     this.searchForm.valueChanges
       .pipe(
         takeUntil(this.unsubscribe),

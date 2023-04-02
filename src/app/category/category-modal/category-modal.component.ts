@@ -1,19 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { ActionSheetService } from '../../shared/service/action-sheet.service';
-import { filter, from } from 'rxjs';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {Category} from "../../shared/domain";
-import {CategoryService} from "../category.service";
-import {ToastService} from "../../shared/service/toast.service";
+import { filter, from, mergeMap } from 'rxjs';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Category } from '../../shared/domain';
+import { CategoryService } from '../category.service';
+import { ToastService } from '../../shared/service/toast.service';
 
 @Component({
   selector: 'app-category-modal',
   templateUrl: './category-modal.component.html',
 })
-export class CategoryModalComponent {
+export class CategoryModalComponent implements OnInit {
+  ngOnInit(): void {
+    this.categoryForm.patchValue(this.category);
+  }
 
-constructor(
+  constructor(
     private readonly actionSheetService: ActionSheetService,
     private readonly categoryService: CategoryService,
     private readonly formBuilder: FormBuilder,
@@ -50,13 +53,23 @@ constructor(
 
   delete(): void {
     from(this.actionSheetService.showDeletionConfirmation('Are you sure you want to delete this category?'))
-      .pipe(filter((action) => action === 'delete'))
+      .pipe(
+        filter((action) => action === 'delete'),
+        mergeMap(() => {
+          this.submitting = true;
+          return this.categoryService.deleteCategory(this.category.id!);
+        })
+      )
       .subscribe({
         next: () => {
-          this.modalCtrl.dismiss(null, 'delete');
+          this.toastService.displaySuccessToast('Category deleted');
+          this.modalCtrl.dismiss(null, 'refresh');
+          this.submitting = false;
+        },
+        error: (error) => {
+          this.toastService.displayErrorToast('Could not delete category', error);
+          this.submitting = false;
         },
       });
   }
 }
-
-
