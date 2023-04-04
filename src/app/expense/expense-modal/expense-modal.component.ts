@@ -1,22 +1,47 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import {BehaviorSubject, filter, from, mergeMap} from 'rxjs';
+import { BehaviorSubject, filter, from, mergeMap } from 'rxjs';
 import { CategoryModalComponent } from '../../category/category-modal/category-modal.component';
 import { ActionSheetService } from '../../shared/service/action-sheet.service';
-import {Category} from "../../shared/domain";
+import {Category, Expense} from '../../shared/domain';
+import { CategoryService } from '../../category/category.service';
+import { ToastService } from '../../shared/service/toast.service';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { ExpenseService } from '../expense.service';
+import {formatISO} from "date-fns";
 
 @Component({
   selector: 'app-expense-modal',
   templateUrl: './expense-modal.component.html',
 })
 export class ExpenseModalComponent implements OnInit {
+  ngOnInit(): void {
+    const { id, amount, category, date, name } = this.expense;
+    if (category) this.categories.push(category);
+    if (id) this.expenseForm.patchValue({ id, amount, categoryId: category?.id, date, name });
+    this.loadAllCategories();
+  }
   categories: Category[] = [];
-  submitting: any;
+  expense: Expense = {} as Expense;
   categoryForm: any | Event;
-  constructor(
+  submitting = false;
+    constructor(
     private readonly actionSheetService: ActionSheetService,
-    private readonly modalCtrl: ModalController
-  ) {}
+    private readonly modalCtrl: ModalController,
+    private readonly categoryService: CategoryService,
+    private readonly toastService: ToastService,
+    private readonly formBuilder: FormBuilder,
+    private readonly expenseService: ExpenseService
+  ) {
+    this.expenseForm = this.formBuilder.group({
+      id: [], //hidden
+      categoryId: [],
+      name: ['', [Validators.required, Validators.maxLength(40)]],
+      amount: [],
+      date: [formatISO(new Date())],
+    });
+  }
+  readonly expenseForm: FormGroup;
 
   cancel(): void {
     this.modalCtrl.dismiss(null, 'cancel');
@@ -40,7 +65,7 @@ export class ExpenseModalComponent implements OnInit {
   }
   private loadAllCategories(): void {
     const pageToLoad = new BehaviorSubject(0);
-   /* pageToLoad
+    pageToLoad
       .pipe(mergeMap((page) => this.categoryService.getCategories({ page, size: 25, sort: 'name,asc' })))
       .subscribe({
         next: (categories) => {
@@ -49,9 +74,6 @@ export class ExpenseModalComponent implements OnInit {
           if (!categories.last) pageToLoad.next(pageToLoad.value + 1);
         },
         error: (error) => this.toastService.displayErrorToast('Could not load categories', error),
-      });*/
-  }
-  ngOnInit(): void {
-    this.loadAllCategories();
+      });
   }
 }

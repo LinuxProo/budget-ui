@@ -44,10 +44,13 @@ export class CategoryListComponent implements OnInit, OnDestroy {
   }
 
   async openModal(category?: Category): Promise<void> {
-    const modal = await this.modalCtrl.create({ component: CategoryModalComponent });
+    const modal = await this.modalCtrl.create({ component: CategoryModalComponent,
+      componentProps: { category: category ? { ...category} : {}},
+    });
     modal.present();
     const { role } = await modal.onWillDismiss();
-    if (role === 'refresh') this.reloadCategories();
+    if (role === 'refresh') this.loadCategories();
+    console.log('role', role);
   }
   private loadCategories(next: () => void = () => {}): void {
     if (!this.searchCriteria.name) delete this.searchCriteria.name;

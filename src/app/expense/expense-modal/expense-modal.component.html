@@ -3,60 +3,61 @@
 <!-- ------ -->
 <ion-header>
   <ion-toolbar>
-    <ion-progress-bar *ngIf="submitting" type="indeterminate"></ion-progress-bar>
-    <ion-buttons slot="start">
-      <ion-button color="medium" (click)="cancel()">
-        <ion-icon slot="start" name="close"></ion-icon>
+    <ion-buttons slot='start' (click)='cancel()'>
+      <ion-button type='button' color='medium' [disabled]='submitting'>
+        <ion-icon slot='start' name='close'></ion-icon>
         Cancel
       </ion-button>
     </ion-buttons>
-    <ion-title>Edit Expense</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="save()" [disabled]="categoryForm.pristine || categoryForm.invalid || submitting">
-
-        <ion-icon slot="end" name="save"></ion-icon>
+    <ion-title>
+      <div *ngIf="expense.id; else elseBlock">Edit Expense</div>
+      <ng-template #elseBlock>Add Expense</ng-template>
+    </ion-title>
+    <ion-buttons slot='end'>
+      <ion-button type='button' color='medium' (click)='save()'
+                  [disabled]='expenseForm.pristine || expenseForm.invalid || submitting'>
+        <ion-icon slot='start' name='save'></ion-icon>
         Save
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-
 <!-- ------- -->
 <!-- Content -->
 <!-- ------- -->
-<ion-content class="ion-padding" [formGroup]="categoryForm">
+<ion-content class='ion-padding' [formGroup]='expenseForm'>
   <ion-item>
-    <ion-icon name="text" slot="start"></ion-icon>
-    <ion-input maxlength="40" placeholder="Enter the category's name" required formControlName="name"
-               [disabled]="submitting"></ion-input>
+    <ion-icon slot='start' name='text'></ion-icon>
+    <ion-input placeholder="Enter the expense's name" formControlName='name' [disabled]='submitting'></ion-input>
   </ion-item>
   <ion-item>
-    <ion-icon name="pricetag-outline" slot="start"></ion-icon>
-    <ion-input maxlength="40" required formControlName="name">
-      <ion-select interface="popover" value="Choose Category">
-        <ion-select-option>Choose Category</ion-select-option>
-        <ion-select-option>20min</ion-select-option>
-      </ion-select>
-      <ion-buttons>
-        <ion-button>
-          <ion-icon name="add-circle-outline" slot="end"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-    </ion-input>
+    <ion-icon slot='start' name='pricetag'></ion-icon>
+    <ion-select interface='popover'  placeholder='Choose a category' formControlName='categoryId'>
+      <ion-select-option role='option' *ngFor='let category of categories' [value]='category.id'>
+        {{category.name}}
+      </ion-select-option>
+    </ion-select>
+    <ion-button color="warning" slot='end' (click)='showCategoryModal()' >
+      <ion-icon slot='icon-only' name='add'></ion-icon>
+    </ion-button>
   </ion-item>
   <ion-item>
-    <ion-icon name="cash-outline" slot="start"></ion-icon>
-    <ion-input maxlength="40" placeholder="Price in CHF" required formControlName="name"
-               [disabled]="submitting"></ion-input>
+    <ion-icon slot='start' name='wallet-outline'></ion-icon>
+    <ion-input type='number' inputmode='decimal' placeholder='Enter the amount in CHF' step='0.05' formControlName='amount'></ion-input>
+    <ion-note slot='end'>CHF</ion-note>
   </ion-item>
   <ion-item>
-    <ion-icon name="calendar-outline" slot="start"></ion-icon>
-    <ion-input maxlength="40" placeholder="Date of Adding" required formControlName="name"
-               [disabled]="submitting"></ion-input>
+    <ion-icon slot='start' name="calendar-number-outline"></ion-icon>
+    <ion-datetime-button datetime='datetime'></ion-datetime-button>
+    <ion-modal [keepContentsMounted]='true'>
+      <ng-template>
+        <ion-datetime color="light" presentation='date' id='datetime' formControlName='date'> <span slot="title">Select the purchase date</span> </ion-datetime>
+      </ng-template>
+    </ion-modal>
   </ion-item>
-  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-    <ion-fab-button (click)="delete()" color="danger">
-      <ion-icon name="trash"></ion-icon>
+  <ion-fab slot='fixed' vertical='bottom' horizontal='end'>
+    <ion-fab-button (click)='delete()' color='danger'>
+      <ion-icon name='trash'></ion-icon>
     </ion-fab-button>
   </ion-fab>
 </ion-content>

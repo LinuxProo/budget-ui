@@ -16,6 +16,11 @@ export class CategoryModalComponent implements OnInit {
     this.categoryForm.patchValue(this.category);
   }
 
+  category: Category = {} as Category;
+
+  readonly categoryForm: FormGroup;
+  submitting = false;
+
   constructor(
     private readonly actionSheetService: ActionSheetService,
     private readonly categoryService: CategoryService,
@@ -46,10 +51,6 @@ export class CategoryModalComponent implements OnInit {
     });
   }
   // Passed into the component by the ModalController, available in the ngOnInit
-  category: Category = {} as Category;
-
-  readonly categoryForm: FormGroup;
-  submitting = false;
 
   delete(): void {
     from(this.actionSheetService.showDeletionConfirmation('Are you sure you want to delete this category?'))
