@@ -8,7 +8,7 @@ import { CategoryService } from '../../category/category.service';
 import { ToastService } from '../../shared/service/toast.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import { ExpenseService } from '../expense.service';
-import {formatISO} from "date-fns";
+import { format, formatISO, parseISO } from 'date-fns';
 
 @Component({
   selector: 'app-expense-modal',
@@ -48,7 +48,20 @@ export class ExpenseModalComponent implements OnInit {
   }
 
   save(): void {
-    this.modalCtrl.dismiss(null, 'save');
+    this.submitting = true;
+    this.expenseService
+      .upsertExpense({ ...this.expenseForm.value, date: format(parseISO(this.expenseForm.value.date), 'yyyy-MM-dd')})
+      .subscribe({
+        next: () => {
+          this.toastService.displaySuccessToast('Expense saved');
+          this.modalCtrl.dismiss(null, 'refresh');
+          this.submitting = false;
+        },
+        error: (error) => {
+          this.toastService.displayErrorToast('Could not save category', error);
+          this.submitting = false;
+        },
+      });
   }
 
   delete(): void {
