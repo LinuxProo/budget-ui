@@ -61,6 +61,7 @@ export class ExpenseListComponent implements OnInit, OnDestroy {
 
   addMonths = (number: number): void => {
     this.date = addMonths(this.date, number);
+    this.reloadExpenses();
   };
 
   async openModal(expense?: Expense): Promise<void> {
